@@ -1,0 +1,47 @@
+FINAL v1.0.7 PATCHED — Native Gazebo Sensor Transport
+
+Build error fixed:
+The Gazebo message header is named laserscan.pb.h, not laser_scan.pb.h.
+Gazebo Harmonic's gz-msgs provides:
+  #include <gz/msgs/laserscan.pb.h>
+
+The plugin subscribes natively to gz::msgs::Image and gz::msgs::LaserScan,
+so the demo does not require ros_gz_bridge.
+
+Build:
+
+cd ~/gz_sensor_monitor_ws
+source /opt/ros/jazzy/setup.bash
+
+rm -rf build/gz_sensor_monitor
+rm -rf install/gz_sensor_monitor
+
+colcon build --symlink-install --packages-select gz_sensor_monitor
+
+source install/setup.bash
+
+export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
+export GZ_GUI_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
+
+gz sim --force-version 8 -v 4 $HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/share/gz_sensor_monitor/worlds/sensor_screen_demo.sdf
+
+Expected native subscriptions:
+[GzSensorMonitor] native Gazebo subscription OK: front_rgb -> /camera/image_raw
+[GzSensorMonitor] native Gazebo subscription OK: front_depth -> /camera/depth/image_raw
+[GzSensorMonitor] native Gazebo subscription OK: front_rgbd -> /camera/image_raw
+[GzSensorMonitor] native Gazebo subscription OK: front_lidar -> /lidar/scan
+
+Then:
+ros2 topic pub --once /screen/mode std_msgs/msg/String "{data: front_rgb}"
+ros2 topic pub --once /screen/mode std_msgs/msg/String "{data: front_depth}"
+ros2 topic pub --once /screen/mode std_msgs/msg/String "{data: front_rgbd}"
+ros2 topic pub --once /screen/mode std_msgs/msg/String "{data: front_lidar}"
+
+
+IMPORTANT FIXES in this patched build:
+- Includes gz/msgs/laserscan.pb.h in the public header.
+- Uses explicit std::function + Subscribe<T>() for Gazebo Transport 13 callback deduction.
+- Implements native Gazebo RGB, depth and LaserScan callbacks.
+- Stores native Gazebo LiDAR radar frames separately from ROS LaserScan frames.
+- Demo RGB-D source now uses /camera/rgbd/image and /camera/rgbd/depth_image, matching Gazebo Harmonic sensor output.
+- The GUI visual initialization already succeeds in your logs; the missing screen update was because native sensor frames were not being converted/stored/published.

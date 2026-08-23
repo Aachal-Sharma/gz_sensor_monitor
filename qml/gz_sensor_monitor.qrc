@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/libGzSensorMonitorGui.so">
+    <file>libGzSensorMonitorGui.so.qml</file>
+  </qresource>
+</RCC>

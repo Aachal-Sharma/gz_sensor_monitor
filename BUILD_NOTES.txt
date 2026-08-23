@@ -1,0 +1,15 @@
+GzSensorMonitor architecture:
+1) SensorMonitorSystem runs in Gazebo server.
+2) It subscribes to ROS 2 sensor topics using rclcpp.
+3) It converts RGB/depth/RGB-D/LaserScan to a 640x480 RGB frame.
+4) It publishes the generated frame as gz.msgs.Image on /gz_sensor_monitor/frame.
+5) SensorMonitorGui subscribes to that Gazebo Transport topic.
+6) GUI texture changes happen only from gz::gui::events::Render, i.e. the GUI render thread.
+7) The GUI plugin finds the client-side monitor_screen_visual and updates its material texture.
+
+Important:
+- RGB-D needs both <topic> and <depth_topic>.
+- The bridge.yaml is for the ROS 2 sensor subscriptions. The screen frame itself stays on Gazebo Transport.
+- If your robot already publishes ROS topics through ros_gz_bridge, keep your existing bridge and add only the missing image/depth/LaserScan mappings.
+- If a sensor's Gazebo topic is scoped, use `gz topic -l` and put that exact topic in bridge.yaml.
+- The demo world is a starting test world; adapt sensor SDF to your robot's actual sensor configuration.

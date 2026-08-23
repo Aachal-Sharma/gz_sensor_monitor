@@ -1,0 +1,13 @@
+build/
+install/
+log/
+
+*.so
+*.o
+
+__pycache__/
+*.pyc
+*.swp
+*.swo
+
+*:Zone.Identifier

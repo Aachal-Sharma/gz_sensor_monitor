@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>gz_sensor_monitor</name>
+  <version>3.2.0</version>
+  <description>Generic multi-source virtual sensor screen for Gazebo Sim Harmonic and ROS 2 Jazzy.</description>
+  <maintainer email="your_email@example.com">Aachal Sharma</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <depend>gz-sim8</depend>
+  <depend>gz-rendering8</depend>
+  <depend>gz-common5</depend>
+  <depend>gz-gui8</depend>
+  <depend>gz-plugin2</depend>
+  <depend>gz-transport13</depend>
+  <depend>gz-msgs10</depend>
+
+  <depend>opencv</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

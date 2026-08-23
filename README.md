@@ -196,8 +196,6 @@ export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_mo
 export GZ_GUI_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
 
 
-.
-
 👨‍💻 Authors
 
 Aachal Sharma
@@ -212,17 +210,3 @@ See the repository for license information.
 GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystem for robotics simulation and sensor visualization.
 
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="docs/images/rgb_feedback.png" width="100%">
-      <br>
-      <b>RGB Camera Feedback</b>
-    </td>
-    <td align="center">
-      <img src="docs/images/rgbd_feedback.png" width="100%">
-      <br>
-      <b>RGB-D Camera Feedback</b>
-    </td>
-  </tr>
-</table>

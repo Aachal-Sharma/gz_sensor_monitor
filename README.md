@@ -7,7 +7,7 @@
 Instead of switching between Gazebo, RViz, image viewers, or other external visualization tools, sensor data can be viewed directly inside the simulated environment.
 
 <p align="center">
-  <img src="docs/images/gz_sensor_monitor_demo.png" width="850">
+  <img src="docs/images/depth_monitor.png" width="850">
 </p>
 
 ---

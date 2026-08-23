@@ -46,7 +46,7 @@ With GzSensorMonitor:
           └─────────────────┘
 
 
-✨ Features
+### ✨ Features
 📷 RGB Camera visualization
 🎥 RGB-D camera visualization
 📏 Depth visualization

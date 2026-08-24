@@ -1,93 +1,202 @@
 GzSensorMonitor
 
-Real-Time Sensor Feedback Inside Gazebo Harmonic
+Real-Time Sensor Visualization Inside Gazebo Harmonic
 
-GzSensorMonitor is a Gazebo Harmonic plugin that enables real-time visualization of simulated sensor data directly inside the Gazebo environment through a virtual monitor.
+GzSensorMonitor is a Gazebo Harmonic plugin for visualizing simulated sensor data directly inside the Gazebo environment through an integrated virtual monitor.
 
-Instead of switching between Gazebo, RViz, image viewers, or other external visualization tools, GzSensorMonitor brings sensor feedback directly into the simulation, providing a more integrated workflow for robotics simulation, perception development, and sensor debugging.
+It eliminates the need to switch between Gazebo, RViz, image viewers, or other external visualization tools when inspecting sensor output. Sensor data can be viewed, monitored, and switched at runtime while the simulation is running.
+
+The project is designed for robotics simulation, perception development, sensor debugging, and research workflows using ROS 2 Jazzy, Gazebo Harmonic, and Ubuntu 24.04.
 
 <p align="center">
-  <img src="docs/images/depth_monitor.png" width="850" alt="GzSensorMonitor Depth Visualization">
+  <img src="docs/images/depth_monitor.png" width="850" alt="GzSensorMonitor displaying depth sensor data inside Gazebo">
 </p>---
 
-🎯 Why GzSensorMonitor?
+Overview
 
-In a typical robotics simulation workflow, sensor data is often visualized using external tools:
+When developing robotic systems in simulation, sensor data is typically generated inside Gazebo and then visualized using external applications.
 
-              Gazebo
-                |
-        Robot + Sensors
-                |
-        Sensor Feedback
-                |
-       +--------+--------+
-       |                 |
-      RViz          Image Viewer
+A conventional workflow looks like this:
 
-This requires switching between multiple applications while developing and debugging a simulation.
+                         Gazebo
+                           |
+                    Robot + Sensors
+                           |
+                     Sensor Data
+                           |
+              +------------+------------+
+              |                         |
+             RViz                Image Viewer
 
-With GzSensorMonitor, sensor feedback is displayed directly inside Gazebo:
+Although this workflow is effective, it requires developers to move between multiple applications during simulation and debugging.
 
-                  Gazebo
-                    |
-             Robot + Sensors
-                    |
-                    v
-             GzSensorMonitor
-                    |
-                    v
-          ┌───────────────────┐
-          │      Monitor      │
-          │                   │
-          │   Live Sensor     │
-          │     Feedback      │
-          └───────────────────┘
+GzSensorMonitor provides an integrated alternative:
 
-This provides a unified visualization workflow without requiring a separate image viewer.
+                         Gazebo
+                           |
+                    Robot + Sensors
+                           |
+                           v
+                   GzSensorMonitor
+                           |
+                           v
+              +-------------------------+
+              |       Virtual Monitor   |
+              |                         |
+              |   Live Sensor Feedback  |
+              |                         |
+              +-------------------------+
 
----
-
-✨ Features
-
-- 📷 RGB Camera Visualization
-- 🎥 RGB-D Camera Visualization
-- 📏 Depth Image Visualization
-- 📡 LiDAR Visualization
-- 🖥️ Virtual Monitor Inside Gazebo
-- ⚡ Real-Time Sensor Updates
-- 🔄 Runtime Sensor Switching
-- 🧩 Gazebo GUI + System Plugin Architecture
-- 🚫 No Separate Image Viewer Required
-- 🤖 Designed for Robotics Simulation and Perception Development
-- 🐧 ROS 2 Jazzy + Ubuntu 24.04
-- 🌐 Gazebo Harmonic / gz-sim
+Sensor feedback is rendered directly inside Gazebo, keeping the simulation and visualization workflow in one environment.
 
 ---
 
-🔄 Runtime Sensor Switching
+Key Features
 
-One of the key features of GzSensorMonitor is the ability to change the displayed sensor while Gazebo is running.
+- RGB Camera Visualization
+- RGB-D Camera Visualization
+- Depth Image Visualization
+- LiDAR Visualization
+- Virtual Sensor Monitor Inside Gazebo
+- Real-Time Sensor Updates
+- Runtime Sensor Switching
+- Gazebo GUI Plugin Integration
+- Gazebo System Plugin Integration
+- Latest-Frame Display Strategy
+- Non-Blocking Sensor Visualization
+- ROS 2 Topic-Based Sensor Selection
+- No External Image Viewer Required
+- Designed for Robotics and Perception Development
+
+---
+
+Supported Environment
+
+GzSensorMonitor is developed and tested with the following environment:
+
+Component| Version
+Operating System| Ubuntu 24.04
+ROS 2| Jazzy
+Gazebo| Harmonic
+Gazebo Simulator| "gz-sim"
+C++ Standard| C++17
+Build System| CMake
+Build Tool| colcon
+
+«Important: GzSensorMonitor targets modern Gazebo ("gz-sim") and is not intended for Gazebo Classic.»
+
+---
+
+Architecture
+
+GzSensorMonitor is implemented using two primary Gazebo components:
+
+1. System Plugin — responsible for sensor data acquisition and frame processing.
+2. GUI Plugin — responsible for rendering sensor data inside the Gazebo interface.
+
+The overall data flow is:
+
+                         Gazebo Harmonic
+                                |
+                +---------------+---------------+
+                |                               |
+                v                               v
+         System Plugin                    GUI Plugin
+                |                               |
+                v                               v
+         Sensor Callbacks                   Rendering
+                |                               |
+                v                               v
+         Frame Processing              Monitor Visual
+                |                               |
+                +---------------+---------------+
+                                |
+                                v
+                       Live Sensor Display
+
+System Plugin
+
+The System Plugin handles the sensor-side processing pipeline.
+
+Its responsibilities include:
+
+- Receiving sensor data from Gazebo.
+- Processing incoming sensor frames.
+- Managing the currently selected sensor.
+- Maintaining the latest available frame.
+- Supporting runtime sensor switching.
+- Passing processed data to the visualization layer.
+
+GUI Plugin
+
+The GUI Plugin provides the visualization layer inside Gazebo.
+
+Its responsibilities include:
+
+- Creating and managing the virtual monitor.
+- Rendering the latest sensor frame.
+- Updating the monitor texture.
+- Providing live visual feedback inside the Gazebo GUI.
+
+---
+
+Sensor Data Pipeline
+
+The visualization pipeline is designed around the latest available sensor frame:
+
+                  Sensor Frame
+                       |
+                       v
+             Gazebo Sensor Callback
+                       |
+                       v
+                Frame Processing
+                       |
+                       v
+              Latest Display Frame
+                       |
+                       v
+                   Gazebo GUI
+                       |
+                       v
+                 Monitor Texture
+
+GzSensorMonitor prioritizes displaying the most recent sensor frame rather than processing every incoming frame sequentially.
+
+If sensor data is produced faster than the GUI can render it, intermediate frames can be skipped.
+
+This prevents the visualization pipeline from unnecessarily blocking sensor processing and helps maintain a responsive Gazebo interface during high-frequency simulation.
+
+---
+
+Runtime Sensor Switching
+
+One of the main features of GzSensorMonitor is the ability to change the displayed sensor without restarting Gazebo.
 
 For example:
 
 RGB
- ↓
+ |
+ v
 Depth
- ↓
+ |
+ v
 RGB-D
- ↓
+ |
+ v
 LiDAR
- ↓
+ |
+ v
 RGB
 
-The simulation does not need to be restarted when switching between sensors.
+This allows developers to inspect different sensor modalities during the same simulation run.
 
-Select RGB
+Select RGB Camera
 
 ros2 topic pub --once /sensor_monitor/mode \
 std_msgs/msg/String "{data: front_rgb}"
 
-Select Depth
+Select Depth Camera
 
 ros2 topic pub --once /sensor_monitor/mode \
 std_msgs/msg/String "{data: front_depth}"
@@ -97,163 +206,123 @@ Select LiDAR
 ros2 topic pub --once /sensor_monitor/mode \
 std_msgs/msg/String "{data: front_lidar}"
 
-This makes it possible to inspect different sensor modalities during a single simulation run.
+The selected sensor mode is communicated through the ROS 2 topic:
+
+/sensor_monitor/mode
+
+with message type:
+
+std_msgs/msg/String
 
 ---
 
-⚡ Real-Time Sensor Updates
+Installation
 
-GzSensorMonitor is designed for live sensor visualization with an emphasis on keeping the Gazebo interface responsive.
+Prerequisites
 
-The sensor data flow is:
+Before installing GzSensorMonitor, make sure the following are available:
 
-        Sensor Frame
-             |
-             v
-   Gazebo Sensor Callback
-             |
-             v
-      Frame Processing
-             |
-             v
-    Latest Display Frame
-             |
-             v
-        Gazebo GUI
-             |
-             v
-       Monitor Texture
+- Ubuntu 24.04
+- ROS 2 Jazzy
+- Gazebo Harmonic
+- "colcon"
+- CMake
+- C++17-compatible compiler
+- Git
 
-The monitor prioritizes the latest available sensor frame.
+Make sure ROS 2 Jazzy is installed and available at:
 
-If sensor data arrives faster than the renderer can display it, intermediate frames may be skipped rather than blocking the sensor processing pipeline.
-
-This approach helps maintain a responsive visualization experience during high-frequency sensor simulation.
+/opt/ros/jazzy
 
 ---
 
-🏗️ Architecture
+1. Create a Workspace
 
-GzSensorMonitor consists of two primary components:
-
-                    Gazebo Harmonic
-                           |
-             +-------------+-------------+
-             |                           |
-             v                           v
-       System Plugin                GUI Plugin
-             |                           |
-             v                           v
-       Sensor Data                  Rendering
-             |                           |
-             v                           v
-       Frame Processing          Monitor Visual
-             |                           |
-             +-------------+-------------+
-                           |
-                           v
-                    Live Sensor Feed
-
-System Plugin
-
-The system plugin is responsible for:
-
-- Accessing simulated sensor data
-- Receiving sensor callbacks
-- Processing incoming frames
-- Managing the latest available sensor frame
-- Handling sensor selection and runtime switching
-
-GUI Plugin
-
-The GUI plugin is responsible for:
-
-- Rendering the virtual monitor
-- Displaying the latest processed sensor frame
-- Updating the monitor texture
-- Providing visualization directly inside Gazebo
-
----
-
-📋 Requirements
-
-GzSensorMonitor has been developed and tested with the following environment:
-
-Component| Version
-Operating System| Ubuntu 24.04
-ROS 2| Jazzy
-Gazebo| Harmonic
-Language| C++17
-Build System| CMake
-Build Tool| colcon
-
-«Note: This project targets modern Gazebo ("gz-sim") and is not intended for Gazebo Classic.»
-
----
-
-📦 Installation
-
-1. Create a ROS 2 Workspace
+Create a ROS 2 workspace:
 
 mkdir -p ~/gz_sensor_monitor_ws/src
+
+Navigate to the source directory:
+
 cd ~/gz_sensor_monitor_ws/src
+
+---
 
 2. Clone the Repository
 
+Clone the GzSensorMonitor repository:
+
 git clone https://github.com/Aachal-Sharma/gz_sensor_monitor.git
 
+Then navigate to the workspace:
+
+cd ~/gz_sensor_monitor_ws
+
+---
+
 3. Source ROS 2 Jazzy
+
+Before building the package, source ROS 2 Jazzy:
 
 source /opt/ros/jazzy/setup.bash
 
 ---
 
-🔨 Build
+Build
 
-Navigate to the workspace:
+Build the package using "colcon":
 
 cd ~/gz_sensor_monitor_ws
 
-Source ROS 2 Jazzy:
-
 source /opt/ros/jazzy/setup.bash
-
-Build the package:
 
 colcon build --symlink-install \
   --packages-select gz_sensor_monitor
 
-Source the workspace:
+After a successful build, source the workspace:
 
 source install/setup.bash
 
 ---
 
-⚙️ Configure Gazebo Plugin Paths
+Gazebo Plugin Configuration
 
-Set the Gazebo System Plugin path:
+GzSensorMonitor contains both a Gazebo System Plugin and a Gazebo GUI Plugin.
+
+The corresponding plugin paths must therefore be available to Gazebo.
+
+System Plugin Path
 
 export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
 
-Set the Gazebo GUI Plugin path:
+GUI Plugin Path
 
 export GZ_GUI_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
 
-For convenience, these environment variables can also be added to your shell configuration:
+For convenience, these paths can be added permanently to your shell configuration:
 
 echo 'export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib' >> ~/.bashrc
+
 echo 'export GZ_GUI_PLUGIN_PATH=$HOME/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib' >> ~/.bashrc
+
+Reload the shell configuration:
+
 source ~/.bashrc
+
+You can verify the configured paths with:
+
+echo $GZ_SIM_SYSTEM_PLUGIN_PATH
+echo $GZ_GUI_PLUGIN_PATH
 
 ---
 
-🚀 Usage
+Usage
 
-After building the package and configuring the Gazebo plugin paths, launch your Gazebo Harmonic simulation containing the supported sensors.
+After building the package and configuring the plugin paths, launch your Gazebo Harmonic simulation with the required sensors and GzSensorMonitor configuration.
 
-Once GzSensorMonitor is loaded, the virtual monitor can display sensor feedback directly inside the Gazebo interface.
+Once the plugin is loaded, the virtual monitor provides live sensor visualization directly inside the Gazebo GUI.
 
-Sensor modes can be changed at runtime using the ROS 2 topic:
+Sensor selection can be changed while the simulation is running using the ROS 2 topic:
 
 /sensor_monitor/mode
 
@@ -262,63 +331,225 @@ For example:
 ros2 topic pub --once /sensor_monitor/mode \
 std_msgs/msg/String "{data: front_rgb}"
 
-or:
+To display the depth sensor:
 
 ros2 topic pub --once /sensor_monitor/mode \
 std_msgs/msg/String "{data: front_depth}"
 
+To display LiDAR:
+
+ros2 topic pub --once /sensor_monitor/mode \
+std_msgs/msg/String "{data: front_lidar}"
+
 ---
 
-🧪 Example Sensor Modes
+Example Sensor Modes
 
-Sensor| Example Mode
+Sensor| Mode
 RGB Camera| "front_rgb"
 Depth Camera| "front_depth"
 LiDAR| "front_lidar"
 
-Additional sensor modes can be supported depending on the configured simulation and plugin implementation.
+The available sensor names depend on the sensors configured in the Gazebo simulation.
 
 ---
 
-🤖 Use Cases
+Performance Considerations
 
-GzSensorMonitor can be useful for:
+GzSensorMonitor is designed to provide responsive real-time visualization without unnecessarily blocking the sensor pipeline.
 
-- Robotics simulation
-- Computer vision development
-- Sensor debugging
-- Perception algorithm development
-- Autonomous robot development
-- Gazebo sensor testing
-- RGB/RGB-D camera development
-- LiDAR visualization
-- Simulation demonstrations
-- Research and academic projects
+Instead of requiring every incoming frame to be rendered, the monitor maintains the latest available frame.
+
+Conceptually:
+
+Sensor publishes frames:
+
+Frame 1
+Frame 2
+Frame 3
+Frame 4
+Frame 5
+   |
+   v
+
+GUI is currently rendering Frame 3
+
+Instead of waiting for:
+Frame 4 -> Frame 5
+
+the monitor can update directly to:
+
+Frame 5
+
+This latest-frame strategy is particularly useful for high-frequency sensors where the simulation can generate data faster than the GUI can display it.
+
+The goal is to keep the visualization responsive while preserving access to the most recent sensor information.
 
 ---
 
-👨‍💻 Authors
+Use Cases
+
+GzSensorMonitor can be used in a variety of robotics and simulation workflows, including:
+
+Robotics Simulation
+
+Visualize simulated robot sensors directly inside the simulation environment.
+
+Perception Development
+
+Inspect RGB, depth, RGB-D, and LiDAR data while developing perception pipelines.
+
+Sensor Debugging
+
+Quickly verify whether simulated sensors are producing the expected output.
+
+Autonomous Robotics
+
+Monitor sensor feedback while testing navigation, localization, mapping, and perception systems.
+
+Computer Vision
+
+Inspect camera and depth data without opening an external image visualization application.
+
+Research and Education
+
+Use an integrated sensor visualization workflow for robotics research, demonstrations, and teaching.
+
+---
+
+Project Structure
+
+A typical project structure is:
+
+gz_sensor_monitor/
+├── docs/
+│   └── images/
+│       └── depth_monitor.png
+├── include/
+├── src/
+├── CMakeLists.txt
+├── package.xml
+└── README.md
+
+The exact source structure may evolve as the project develops.
+
+---
+
+Troubleshooting
+
+Plugin Not Found
+
+If Gazebo cannot find the plugin, verify that the plugin paths are correctly configured:
+
+echo $GZ_SIM_SYSTEM_PLUGIN_PATH
+echo $GZ_GUI_PLUGIN_PATH
+
+They should point to:
+
+~/gz_sensor_monitor_ws/install/gz_sensor_monitor/lib
+
+If necessary, source the workspace again:
+
+source ~/gz_sensor_monitor_ws/install/setup.bash
+
+---
+
+Build Issues
+
+Make sure ROS 2 Jazzy is sourced before building:
+
+source /opt/ros/jazzy/setup.bash
+
+Then rebuild:
+
+cd ~/gz_sensor_monitor_ws
+
+colcon build --symlink-install \
+  --packages-select gz_sensor_monitor
+
+After building:
+
+source install/setup.bash
+
+---
+
+Sensor Mode Does Not Change
+
+Verify that the ROS 2 topic exists:
+
+ros2 topic list | grep sensor_monitor
+
+Check the topic type:
+
+ros2 topic type /sensor_monitor/mode
+
+The expected type is:
+
+std_msgs/msg/String
+
+You can also inspect the topic:
+
+ros2 topic echo /sensor_monitor/mode
+
+---
+
+Development
+
+GzSensorMonitor is intended to serve as a foundation for integrated sensor visualization inside Gazebo Harmonic.
+
+Potential future improvements may include:
+
+- Additional sensor types
+- Multiple simultaneous monitors
+- Improved visualization controls
+- Sensor configuration through the GUI
+- Additional rendering modes
+- Image processing options
+- Visualization overlays
+- Extended ROS 2 integration
+- Performance optimizations
+
+---
+
+Contributing
+
+Contributions are welcome.
+
+If you would like to improve GzSensorMonitor, you can:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Implement your changes.
+4. Test the changes with ROS 2 Jazzy and Gazebo Harmonic.
+5. Commit your changes.
+6. Open a pull request.
+
+Bug reports, feature requests, documentation improvements, and code contributions are all appreciated.
+
+---
+
+Authors
 
 Aachal Sharma
 Rahul Gupta
 
 ---
 
-📜 License
+Acknowledgements
 
-See the repository for the applicable license information.
-
----
-
-⭐ Acknowledgements
-
-GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystems, with the goal of simplifying sensor visualization and improving the development workflow for robotics simulation and perception applications.
+GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystems with the goal of simplifying sensor visualization and improving the development workflow for robotics simulation and perception applications.
 
 ---
 
-📚 Citation
+License
 
-If you use GzSensorMonitor in your research, project, or publication, please cite:
+See the repository for license information.
+
+---
+
+Citation
+
+If you use GzSensorMonitor in your research, project, publication, or other academic work, please cite:
 
 @software{sharma_gz_sensor_monitor,
   author  = {Aachal Sharma and Rahul Gupta},
@@ -329,18 +560,41 @@ If you use GzSensorMonitor in your research, project, or publication, please cit
 
 ---
 
-🌟 Contributing
+Repository
 
-Contributions, suggestions, bug reports, and feature requests are welcome.
-
-If you would like to contribute, please open an issue or submit a pull request through the GitHub repository.
+GitHub:
+https://github.com/Aachal-Sharma/gz_sensor_monitor
 
 ---
 
-📌 Project Summary
+GzSensorMonitor at a Glance
 
-GzSensorMonitor brings real-time simulated sensor visualization directly into Gazebo Harmonic, eliminating the need to switch between multiple visualization applications.
+┌─────────────────────────────────────────────────────┐
+│                   GzSensorMonitor                   │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Gazebo Harmonic                                    │
+│       │                                             │
+│       ├── RGB Camera                                │
+│       ├── RGB-D Camera                              │
+│       ├── Depth Camera                              │
+│       └── LiDAR                                     │
+│               │                                     │
+│               ▼                                     │
+│        Sensor Processing                            │
+│               │                                     │
+│               ▼                                     │
+│       Latest Sensor Frame                           │
+│               │                                     │
+│               ▼                                     │
+│        Gazebo GUI Plugin                            │
+│               │                                     │
+│               ▼                                     │
+│        Virtual Monitor                              │
+│               │                                     │
+│               ▼                                     │
+│       Live Sensor Visualization                     │
+│                                                     │
+└─────────────────────────────────────────────────────┘
 
-With support for RGB, RGB-D, Depth, and LiDAR visualization, together with runtime sensor switching and a Gazebo GUI + System Plugin architecture, the project provides an integrated solution for robotics simulation and perception development.
-
-Gazebo + Sensors + Visualization — all in one environment.
+GzSensorMonitor brings simulated sensor feedback directly into Gazebo — enabling a unified, real-time visualization workflow for robotics simulation and perception development.

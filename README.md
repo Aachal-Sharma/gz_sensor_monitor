@@ -542,15 +542,14 @@ GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystems wit
 ---
 
 License
-
-See the repository for license information.
-
+Apache-2.0 — Free to use, modify, distribute.
+and This project is released under the **MIT License**.
 ---
-
 Citation
 
 If you use GzSensorMonitor in your research, project, publication, or other academic work, please cite:
 
+```bibtex
 @software{sharma_gz_sensor_monitor,
   author  = {Aachal Sharma and Rahul Gupta},
   title   = {GzSensorMonitor: Real-Time Sensor Feedback Inside Gazebo Harmonic},

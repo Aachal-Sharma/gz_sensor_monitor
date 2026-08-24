@@ -557,5 +557,3 @@ If you use GzSensorMonitor in your research, project, publication, or other acad
   year    = {2026},
   url     = {https://github.com/Aachal-Sharma/gz_sensor_monitor}
 }
-
----

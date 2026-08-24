@@ -1,5 +1,3 @@
-ya# GzSensorMonitor
-
 ### Real-Time Sensor Feedback Inside Gazebo Harmonic
 
 **GzSensorMonitor** is a Gazebo Harmonic plugin that allows real-time sensor feedback to be displayed directly inside the Gazebo simulation using a virtual monitor.
@@ -61,7 +59,7 @@ With GzSensorMonitor:
 🌐 Gazebo Harmonic / gz-sim
 
 
-Runtime Sensor Switching
+###Runtime Sensor Switching
 
 One of the main features is the ability to change the displayed sensor while Gazebo is running.
 

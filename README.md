@@ -543,7 +543,8 @@ GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystems wit
 
 License
 Apache-2.0 — Free to use, modify, distribute.
-and This project is released under the **MIT License**.
+and this project is released under the **MIT License**.
+
 ---
 Citation
 

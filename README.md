@@ -1,4 +1,4 @@
-# GzSensorMonitor
+ya# GzSensorMonitor
 
 ### Real-Time Sensor Feedback Inside Gazebo Harmonic
 
@@ -209,4 +209,16 @@ See the repository for license information.
 
 GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystem for robotics simulation and sensor visualization.
 
+
+## 📚 Citation
+
+If you use GzSensorMonitor in your research, project, or publication, please cite:
+
+```bibtex
+@software{sharma_gz_sensor_monitor,
+  author = {Aachal Sharma and Rahul Gupta},
+  title = {GzSensorMonitor: Real-Time Sensor Feedback Inside Gazebo Harmonic},
+  year = {2026},
+  url = {https://github.com/Aachal-Sharma/gz_sensor_monitor}
+}
 

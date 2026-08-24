@@ -597,4 +597,3 @@ GzSensorMonitor at a Glance
 │                                                     │
 └─────────────────────────────────────────────────────┘
 
-GzSensorMonitor brings simulated sensor feedback directly into Gazebo — enabling a unified, real-time visualization workflow for robotics simulation and perception development.

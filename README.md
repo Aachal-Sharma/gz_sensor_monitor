@@ -43,7 +43,7 @@ With GzSensorMonitor:
           │    Feedback     │
           └─────────────────┘
 
-
+---
 ### ✨ Features
 📷 RGB Camera visualization
 🎥 RGB-D camera visualization

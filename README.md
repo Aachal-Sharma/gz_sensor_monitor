@@ -214,7 +214,6 @@ GzSensorMonitor is developed around the Gazebo Harmonic and ROS 2 ecosystem for 
 
 If you use GzSensorMonitor in your research, project, or publication, please cite:
 
-```bibtex
 @software{sharma_gz_sensor_monitor,
   author = {Aachal Sharma and Rahul Gupta},
   title = {GzSensorMonitor: Real-Time Sensor Feedback Inside Gazebo Harmonic},
